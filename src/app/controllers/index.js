@@ -7,20 +7,22 @@ class controllers {
         try {
             const { number } = req.params;
 
-            if(!isNumber(number)) {
+            if (!isNumber(number)) {
                 throw new Error('Not a valid number');
             }
 
-            const response = number.length === 47
-                ? ticket(number)
-                : number.length === 48
-                    ? titlesAgreements(number)
-                    : new Error('Not a valid ticket number');
+            let response;
 
+            if (number.length === 47) {
+                response = ticket(number);
+            } else if (number.length === 48) {
+                response = titlesAgreements(number);
+            } else {
+                throw new Error('Isnt a valid ticket number');
+            }
 
             res.status(200).send(response);
         } catch (err) {
-            console.error(err);
             res.status(400).send(err.message);
         }
     };

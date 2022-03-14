@@ -15,22 +15,17 @@ function titlesAgreements(number) {
 }
 
 function generateBarCode(number) {
-    try {
-        let newCode;
+    let newCode;
 
-        newCode = generateTicket(number);
-        newCode = newCode.split('');
-        newCode.splice(4, 1);
-        newCode = newCode.join('');
-        const dv = number[3] === '6' || number[3] === '7' ? calculateMod10(newCode) : calculateMod11(newCode);
-        newCode = newCode.substring(0, 4) + dv + newCode.substring(4);
+    newCode = generateTicket(number);
+    newCode = newCode.split('');
+    newCode.splice(4, 1);
+    newCode = newCode.join('');
+    const dv = number[3] === '6' || number[3] === '7' ? calculateMod10(newCode) : calculateMod11(newCode);
+    newCode = newCode.substring(0, 4) + dv + newCode.substring(4);
 
-        return newCode;
+    return newCode;
 
-    } catch (err) {
-        console.error(err.message);
-        throw new Error('Erro ao gerar o código de barras');
-    }
 };
 
 function calculateMod11(newcode) {
@@ -91,32 +86,27 @@ function generateTicket(number) {
 }
 
 function ticketValue(number) {
-    try {
-        let ticketValue = '';
-        let finalValue;
+    let ticketValue = '';
+    let finalValue;
 
-        ticketValue = number.substring(4, 14);
-        ticketValue = number.split('');
-        ticketValue.splice(11, 1);
-        ticketValue = ticketValue.join('');
-        ticketValue = ticketValue.substring(4, 11);
+    ticketValue = number.substring(4, 14);
+    ticketValue = number.split('');
+    ticketValue.splice(11, 1);
+    ticketValue = ticketValue.join('');
+    ticketValue = ticketValue.substring(4, 11);
 
-        finalValue = ticketValue.substring(0, 9) + '.' + ticketValue.substring(9, 2);
+    finalValue = ticketValue.substring(0, 9) + '.' + ticketValue.substring(9, 2);
 
-        let char = finalValue.substring(1, 1);
-        while (char === '0') {
-            finalValue = substringReplace(finalValue, '', 0, 1);
-            char = finalValue.substring(1, 1);
-        }
-
-
-        finalValue = parseFloat(finalValue).toFixed(2);
-
-        return finalValue;
-    } catch (err) {
-        console.error(err.message);
-        throw new Error('Erro ao gerar o valor do boleto');
+    let char = finalValue.substring(1, 1);
+    while (char === '0') {
+        finalValue = substringReplace(finalValue, '', 0, 1);
+        char = finalValue.substring(1, 1);
     }
+
+
+    finalValue = parseFloat(finalValue).toFixed(2);
+
+    return finalValue;
 }
 
 function substringReplace(str, repl, start, length) {
@@ -138,20 +128,14 @@ function substringReplace(str, repl, start, length) {
 }
 
 function generateExpirationDate(number) {
-    try {
-        const dueDateFactor = number.slice(33, 37);
+    const dueDateFactor = number.slice(33, 37);
 
-        const baseDate = new Date('10/07/1997');
-        baseDate.setTime(baseDate.getTime() + (dueDateFactor * 24 * 60 * 60 * 1000));
-        const formatedDate =
-            `${baseDate.getFullYear()}-${("0" + (baseDate.getMonth() + 1)).slice(-2)}-${("0" + (baseDate.getDate() + 1)).slice(-2)}`;
+    const baseDate = new Date('10/07/1997');
+    baseDate.setTime(baseDate.getTime() + (dueDateFactor * 24 * 60 * 60 * 1000));
+    const formatedDate =
+        `${baseDate.getFullYear()}-${("0" + (baseDate.getMonth() + 1)).slice(-2)}-${("0" + (baseDate.getDate() + 1)).slice(-2)}`;
 
-        return formatedDate;
-    } catch (err) {
-        console.error(err.message);
-        throw new Error('Erro ao gerar o valor do boleto');
-
-    }
+    return formatedDate;
 }
 
 module.exports = titlesAgreements;
