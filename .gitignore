@@ -1,9 +1,16 @@
+#Modules
 node_modules
 
+#Environments
 .env
 
+#Packeges Locks
 yarn.lock
 
 package-lock.json
 
+#Packeges Error Logs
 yarn-error.log
+
+#Unit Tests Logs
+.nyc_output
