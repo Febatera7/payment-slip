@@ -1,19 +1,15 @@
 function ticket(number) {
-    try {
-        const barCode = generateBarCode(number);
+    const barCode = generateBarCode(number);
 
-        const amount = generateValue(number);
+    const amount = generateValue(number);
 
-        const expirationDate = generateExpirationDate(number);
+    const expirationDate = generateExpirationDate(number);
 
-        return {
-            barCode,
-            amount,
-            expirationDate,
-        };
-    } catch (err) {
-        throw new Error(err.message);
-    }
+    return {
+        barCode,
+        amount,
+        expirationDate,
+    };
 }
 
 function generateBarCode(number) {

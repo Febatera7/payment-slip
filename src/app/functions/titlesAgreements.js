@@ -1,16 +1,12 @@
 function titlesAgreements(number) {
-    try {
-        const barCode = generateBarCode(number);
-        const amount = ticketValue(number);
-        const expirationDate = generateExpirationDate(number);
+    const barCode = generateBarCode(number);
+    const amount = ticketValue(number);
+    const expirationDate = generateExpirationDate(number);
 
-        return {
-            barCode,
-            amount,
-            expirationDate
-        }
-    } catch (err) {
-        throw new Error(err.message);
+    return {
+        barCode,
+        amount,
+        expirationDate
     }
 }
 
@@ -21,7 +17,7 @@ function generateBarCode(number) {
     newCode = newCode.split('');
     newCode.splice(4, 1);
     newCode = newCode.join('');
-    const dv = number[3] === '6' || number[3] === '7' ? calculateMod10(newCode) : calculateMod11(newCode);
+    const dv = number[2] === '6' || number[2] === '7' ? calculateMod10(newCode) : calculateMod11(newCode);
     newCode = newCode.substring(0, 4) + dv + newCode.substring(4);
 
     return newCode;
@@ -66,7 +62,7 @@ function calculateMod10(newcode) {
         sum = sum + parseInt(s.charAt(i));
     }
     sum = sum % 10;
-    if (sum != 0) {
+    if (sum !== 0) {
         sum = 10 - sum;
     }
     return sum;
@@ -86,49 +82,26 @@ function generateTicket(number) {
 }
 
 function ticketValue(number) {
-    let ticketValue = '';
-    let finalValue;
 
-    ticketValue = number.substring(4, 14);
-    ticketValue = number.split('');
-    ticketValue.splice(11, 1);
+    let ticketValue = number.slice(4, 16);
+
+    ticketValue = ticketValue.split('', 12);
+
+    ticketValue.splice(7, 1);
+
     ticketValue = ticketValue.join('');
-    ticketValue = ticketValue.substring(4, 11);
 
-    finalValue = ticketValue.substring(0, 9) + '.' + ticketValue.substring(9, 2);
+    const amountFixed = parseInt(ticketValue).toFixed();
 
-    let char = finalValue.substring(1, 1);
-    while (char === '0') {
-        finalValue = substringReplace(finalValue, '', 0, 1);
-        char = finalValue.substring(1, 1);
-    }
+    const amountCents = Math.floor(amountFixed.length - 2);
 
+    const amount = amountFixed.substring(0, amountCents) + '.' + amountFixed.substring(amountCents);
 
-    finalValue = parseFloat(finalValue).toFixed(2);
-
-    return finalValue;
-}
-
-function substringReplace(str, repl, start, length) {
-    if (start < 0) {
-        start = start + str.length;
-    }
-
-    length = length !== undefined ? length : str.length;
-    if (length < 0) {
-        length = length + str.length - start;
-    }
-
-    return [
-        str.slice(0, start),
-        repl.substr(0, length),
-        repl.slice(length),
-        str.slice(start + length)
-    ].join('');
-}
+    return amount;
+};
 
 function generateExpirationDate(number) {
-    const dueDateFactor = number.slice(33, 37);
+    const dueDateFactor = number.slice(34, 38);
 
     const baseDate = new Date('10/07/1997');
     baseDate.setTime(baseDate.getTime() + (dueDateFactor * 24 * 60 * 60 * 1000));
